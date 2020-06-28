@@ -9,7 +9,7 @@
       </v-btn>
     </v-app-bar>
     <v-alert v-model="alert.show" text :type="alert.type" dismissible>{{ alert.message }}</v-alert>
-    <v-row justify="center" align="center">
+    <v-row justify="center">
       <v-col class="text-center" md="2" sm="2">
         <v-btn @click="suForm = true" class="primary">sign up</v-btn>
       </v-col>
@@ -17,7 +17,7 @@
         <v-btn @click="suForm = false" class="success">sign in</v-btn>
       </v-col>
     </v-row>
-    <v-row justify="center" align="center">
+    <v-row justify="center">
       <v-col md="6" sm="6">
         <v-card v-if="suForm">
           <v-card-title>Sign Up</v-card-title>

@@ -1,6 +1,6 @@
 <template>
   <v-container class="text-center">
-    <NavbarP :p_name="professor.name"/>
+    <NavbarP :p_name="professor.name" />
     <v-alert
       class="text-start"
       v-model="alert.show"
@@ -48,7 +48,7 @@
               <th class="text-center">Name</th>
               <th class="text-center">Description</th>
               <th class="text-center">File</th>
-              <th class="text-center">Deliverys</th>
+              <th class="text-center">Deliveries</th>
             </tr>
           </thead>
           <tbody>
@@ -95,7 +95,7 @@
 
 <script>
 import aux from "axios";
-import NavbarP from "@/components/NavbarP"
+import NavbarP from "@/components/NavbarP";
 
 export default {
   data: () => ({
@@ -144,11 +144,14 @@ export default {
       try {
         let valid = this.$refs.addForm.validate();
         if (valid) {
-          const URL = await this.uploadToCloud(this.assignToAdd.a_file);
-          this.assignToAdd.a_file = URL;
+          const assignment = new FormData();
+          assignment.append("a_name", this.assignToAdd.a_name);
+          assignment.append("a_description", this.assignToAdd.a_description);
+          assignment.append("a_file", this.assignToAdd.a_file);
+
           const res = await this.axios.post(
             `/professor/add-assignment/${this.course.id_c}`,
-            this.assignToAdd
+            assignment
           );
 
           this.assignments.push(res.data.assignment);
@@ -162,23 +165,6 @@ export default {
         }
       } catch (error) {
         console.log(error.response);
-      }
-    },
-    async uploadToCloud(file) {
-      const UPLOAD_PRESET = "bz4oq8ph";
-      const UPLOAD_URL = "https://api.cloudinary.com/v1_1/mattezl/image/upload";
-      try {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", UPLOAD_PRESET);
-        const res = await aux.post(UPLOAD_URL, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        });
-        return res.data.secure_url;
-      } catch (error) {
-        return error;
       }
     },
     async getDeliveries(id_a) {

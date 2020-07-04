@@ -156,12 +156,13 @@ export default {
     },
     async deleteCourse(id_c) {
       try {
-        const res = this.axios.delete(`/professor/course/${id_c}`);
+        const res = await this.axios.delete(`/professor/course/${id_c}`);
         const index = this.coursesList.findIndex(c => c.id_c == id_c);
         this.coursesList.splice(index, 1);
+        
         this.alert = {
           show: true,
-          type: "succes",
+          type: "success",
           message: res.data.message
         };
       } catch (error) {

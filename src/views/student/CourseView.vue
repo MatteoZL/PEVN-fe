@@ -1,6 +1,6 @@
 <template>
   <v-container class="text-center">
-    <NavbarS :s_name="student.name"/>
+    <NavbarS :s_name="student.name" />
     <v-alert
       v-model="alert.show"
       text
@@ -79,44 +79,25 @@ export default {
       window.open(link);
     },
     openForm(id_a) {
-      this.deliveryToAdd.id = this.student.id;
       this.deliveryToAdd.id_a = id_a;
       this.add = true;
-    },
-    async uploadToCloud(file) {
-      const UPLOAD_PRESET = "bz4oq8ph";
-      const UPLOAD_URL = "https://api.cloudinary.com/v1_1/mattezl/image/upload";
-      try {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", UPLOAD_PRESET);
-        const res = await aux.post(UPLOAD_URL, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        });
-        return res.data.secure_url;
-      } catch (error) {
-        return error;
-      }
     },
     async addDelivery() {
       try {
         let valid = this.$refs.addForm.validate();
-        this.deliveryToAdd.d_filename = this.deliveryToAdd.d_file.name;
-        const URL = await this.uploadToCloud(this.deliveryToAdd.d_file);
-        this.deliveryToAdd.d_file = URL;
         if (valid) {
-          const res = await this.axios.post(
-            "/student/add-delivery",
-            this.deliveryToAdd
-          );
+          const delivery = new FormData();
+          delivery.append("id", this.student.id);
+          delivery.append("id_a", this.deliveryToAdd.id_a);
+          delivery.append("d_file", this.deliveryToAdd.d_file);
+          const res = await this.axios.post("/student/add-delivery", delivery);
           const index = this.assignments.findIndex(
             a => a.id_a == this.deliveryToAdd.id_a
           );
-          this.assignments[index].d_file = this.deliveryToAdd.d_file;
-          this.assignments[index].d_filename = this.deliveryToAdd.d_filename;
+          this.assignments[index].d_file = res.data.d_file;
+          this.assignments[index].d_filename = res.data.d_filename;
           this.add = false;
+          this.$refs.addForm.reset();
           this.alert = {
             show: true,
             type: "success",

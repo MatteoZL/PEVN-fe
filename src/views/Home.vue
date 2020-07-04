@@ -2,11 +2,6 @@
   <v-container>
     <v-app-bar app color="primary" dark>
       <v-toolbar-title>Mattweb</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn href="https://github.com/vuetifyjs/vuetify/releases/latest" target="_blank" text>
-        <span class="mr-2">Repository</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
     </v-app-bar>
     <v-alert v-model="alert.show" text :type="alert.type" dismissible>{{ alert.message }}</v-alert>
     <v-row justify="center" align="center">
@@ -79,7 +74,7 @@
               ></v-text-field>
               <v-radio-group
                 v-model="user.role"
-                :rules="[(v) => !!v || 'You must agree to continue!']"
+                :rules="[(v) => !!v || 'Please choose one']"
                 row
               >
                 <v-radio label="Professor" value="professor"></v-radio>
